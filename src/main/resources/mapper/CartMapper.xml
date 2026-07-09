@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.elm.mapper.CartMapper">
+
+    <resultMap id="cartResultMap" type="org.example.elm.entity.Cart">
+        <id column="cartId" property="cartId"/>
+        <result column="foodId" property="foodId"/>
+        <result column="businessId" property="businessId"/>
+        <result column="userId" property="userId"/>
+        <result column="quantity" property="quantity"/>
+
+        <!-- 关联 Food（要求 FoodMapper 有 getFoodById 方法） -->
+        <association property="food"
+                     javaType="org.example.elm.entity.Food"
+                     select="org.example.elm.mapper.FoodMapper.getFoodById"
+                     column="foodId"/>
+
+        <!-- 关联 Business（要求 BusinessMapper 有 getBusinessById 方法） -->
+        <association property="business"
+                     javaType="org.example.elm.entity.Business"
+                     select="org.example.elm.mapper.BusinessMapper.getBusinessById"
+                     column="businessId"/>
+    </resultMap>
+
+    <!-- id 必须与接口方法名 listCart 完全一致（小写 l） -->
+    <select id="listCart"
+            parameterType="org.example.elm.entity.Cart"
+            resultMap="cartResultMap">
+        select * from cart
+        <where>
+            userId = #{userId}
+            <if test="businessId != null">
+                and businessId = #{businessId}
+            </if>
+        </where>
+    </select>
+    <delete id="removeCart" parameterType="org.example.elm.entity.Cart">
+        delete from cart
+        <where>
+            userId=#{userId} and businessId=#{businessId}
+            <if test="foodId!=null and foodId!=''">
+                and foodId=#{foodId}
+            </if>
+        </where>
+    </delete>
+
+    <insert id="saveCart" parameterType="map">
+        INSERT INTO cart (userId, businessId, foodId, quantity)
+        VALUES (#{userId}, #{businessId}, #{foodId}, 1)
+    </insert>
+
+    <update id="updateCart" parameterType="map">
+        UPDATE cart 
+        SET quantity = #{quantity} 
+        WHERE userId = #{userId} AND businessId = #{businessId} AND foodId = #{foodId}
+    </update>
+
+
+</mapper>

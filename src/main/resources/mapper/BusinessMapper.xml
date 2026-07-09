@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.elm.mapper.BusinessMapper">
+    <resultMap id="BaseResultMap" type="org.example.elm.entity.Business">
+        <id column="businessId" property="businessId" jdbcType="INTEGER"/>
+        <result column="businessName" property="businessName" jdbcType="VARCHAR"/>
+        <result column="businessAddress" property="businessAddress" jdbcType="VARCHAR"/>
+        <result column="businessExplain" property="businessExplain" jdbcType="VARCHAR"/>
+        <result column="businessImg" property="businessImg" jdbcType="VARCHAR"/>
+        <result column="orderTypeId" property="orderTypeId" jdbcType="INTEGER"/>
+        <result column="starPrice" property="starPrice" jdbcType="DECIMAL"/>
+        <result column="deliveryPrice" property="deliveryPrice" jdbcType="DECIMAL"/>
+        <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        businessId, businessName, businessAddress, businessExplain, businessImg, orderTypeId, starPrice, deliveryPrice, remarks
+    </sql>
+    
+    <select id="listBusinessByOrderTypeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM business
+        WHERE orderTypeId = #{orderTypeId,jdbcType=INTEGER}
+    </select>
+    
+    <select id="getBusinessById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM business
+        WHERE businessId = #{businessId,jdbcType=INTEGER}
+    </select>
+</mapper>

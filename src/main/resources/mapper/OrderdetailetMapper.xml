@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.elm.mapper.OrderdetailetMapper">
+
+    <resultMap id="orderdetailetResultMap" type="org.example.elm.entity.Orderdetailet">
+        <id column="odId" property="odId"/>
+        <result column="orderId" property="orderId"/>
+        <result column="foodId" property="foodId"/>
+        <result column="quantity" property="quantity"/>
+
+        <!-- 关联 Food（要求 FoodMapper 有 getFoodById 方法） -->
+        <association property="food"
+                     javaType="org.example.elm.entity.Food"
+                     select="org.example.elm.mapper.FoodMapper.getFoodById"
+                     column="foodId"/>
+    </resultMap>
+
+    <select id="listOrderdetailetByOrderId"
+            parameterType="Integer"
+            resultMap="orderdetailetResultMap">
+        select * from orderdetailet
+        where orderId = #{orderId}
+    </select>
+    
+    <select id="getOrderdetailetById"
+            parameterType="Integer"
+            resultMap="orderdetailetResultMap">
+        select * from orderdetailet
+        where odId = #{odId}
+    </select>
+
+</mapper>

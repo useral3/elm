@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.elm.mapper.UserMapper">
+    
+    <resultMap id="BaseResultMap" type="org.example.elm.entity.User">
+        <id column="userId" property="userId" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="userName" property="userName" jdbcType="VARCHAR"/>
+        <result column="userSex" property="userSex" jdbcType="INTEGER"/>
+        <result column="userImg" property="userImg" jdbcType="VARCHAR"/>
+        <result column="delTag" property="delTag" jdbcType="INTEGER"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        userId, password, userName, userSex, userImg, delTag
+    </sql>
+    
+    <select id="getUserByIdByPass" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM user
+        WHERE userId = #{userId,jdbcType=VARCHAR} AND password = #{password,jdbcType=VARCHAR} AND delTag = 1
+    </select>
+    
+    <select id="getUserById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user
+        WHERE userId = #{userId,jdbcType=VARCHAR} AND delTag = 1
+    </select>
+    
+    <insert id="saveUser">
+        INSERT INTO user (userId, password, userName, userSex, userImg, delTag)
+        VALUES (#{userId,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+            #{userName,jdbcType=VARCHAR}, #{userSex,jdbcType=INTEGER}, 
+            NULL, 1)
+    </insert>
+    
+    <update id="updateUser">
+        UPDATE user
+        SET userName = #{userName,jdbcType=VARCHAR},
+            userSex = #{userSex,jdbcType=INTEGER}
+        WHERE userId = #{userId,jdbcType=VARCHAR} AND delTag = 1
+    </update>
+
+    <update id="updateUserAvatar">
+        UPDATE user
+        SET userImg = #{userImg,jdbcType=VARCHAR}
+        WHERE userId = #{userId,jdbcType=VARCHAR} AND delTag = 1
+    </update>
+    
+</mapper>

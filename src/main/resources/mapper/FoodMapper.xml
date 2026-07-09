@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.elm.mapper.FoodMapper">
+    <resultMap id="BaseResultMap" type="org.example.elm.entity.Food">
+        <id column="foodId" property="foodId" jdbcType="INTEGER"/>
+        <result column="foodName" property="foodName" jdbcType="VARCHAR"/>
+        <result column="foodExplain" property="foodExplain" jdbcType="VARCHAR"/>
+        <result column="foodImg" property="foodImg" jdbcType="VARCHAR"/>
+        <result column="foodPrice" property="foodPrice" jdbcType="DECIMAL"/>
+        <result column="businessId" property="businessId" jdbcType="INTEGER"/>
+        <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        foodId, foodName, foodExplain, foodImg, foodPrice, businessId, remarks
+    </sql>
+    
+    <select id="listFoodByBusinessId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM food
+        WHERE businessId = #{businessId,jdbcType=INTEGER}
+    </select>
+    
+    <select id="getFoodById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM food
+        WHERE foodId = #{foodId,jdbcType=INTEGER}
+    </select>
+</mapper>

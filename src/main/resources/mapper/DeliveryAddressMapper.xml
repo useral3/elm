@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.elm.mapper.DeliveryAddressMapper">
+    
+    <resultMap id="BaseResultMap" type="org.example.elm.entity.DeliveryAddress">
+        <id column="daId" property="daId" jdbcType="INTEGER"/>
+        <result column="contactName" property="contactName" jdbcType="VARCHAR"/>
+        <result column="contactSex" property="contactSex" jdbcType="INTEGER"/>
+        <result column="contactTel" property="contactTel" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="userId" property="userId" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <select id="listDeliveryAddressByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * FROM deliveryaddress WHERE userId = #{userId}
+    </select>
+    
+    <select id="getDeliveryAddressById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT * FROM deliveryaddress WHERE daId = #{daId}
+    </select>
+    
+    <!-- 修复了保存送货地址的方法，确保不包含自增主键daId -->
+    <insert id="saveDeliveryAddress" parameterType="org.example.elm.entity.DeliveryAddress">
+        INSERT INTO deliveryaddress (contactName, contactSex, contactTel, address, userId)
+        VALUES (#{contactName}, #{contactSex}, #{contactTel}, #{address}, #{userId})
+    </insert>
+    
+    <update id="updateDeliveryAddress" parameterType="org.example.elm.entity.DeliveryAddress">
+        UPDATE deliveryaddress
+        SET contactName = #{contactName},
+            contactSex = #{contactSex},
+            contactTel = #{contactTel},
+            address = #{address},
+            userId = #{userId}
+        WHERE daId = #{daId}
+    </update>
+    
+    <delete id="removeDeliveryAddress" parameterType="java.lang.Integer">
+        DELETE FROM deliveryaddress WHERE daId = #{daId}
+    </delete>
+    
+</mapper>
