@@ -5,7 +5,7 @@
  * - 其他/空 → 从前端 public/img/ 提供
  */
 export function imgUrl(dbPath, fallback = 'img1.png') {
-  if (!dbPath) return '/img/' + fallback
+  if (!dbPath) return '/img/' + (fallback || 'img1.png')
   if (dbPath.startsWith('http')) return dbPath
   if (dbPath.startsWith('/uploads/')) return dbPath    // 后端上传文件
   if (dbPath.startsWith('/img/')) return dbPath          // 已经是前端图片路径

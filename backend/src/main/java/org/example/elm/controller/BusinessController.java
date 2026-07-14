@@ -40,9 +40,10 @@ public class BusinessController {
                                      @RequestParam(required = false) String userId) {
         Business business = businessService.getBusinessById(businessId);
 
-        // 记录用户浏览历史
+        // 记录用户浏览历史（去重：先删旧记录再插到最前）
         if (userId != null && !userId.isEmpty() && business != null) {
             String browseKey = RedisCacheService.browseKey(userId);
+            redisTemplate.opsForList().remove(browseKey, 0, businessId.toString());
             redisTemplate.opsForList().leftPush(browseKey, businessId.toString());
             redisTemplate.opsForList().trim(browseKey, 0, 19);
             redisTemplate.expire(browseKey, 7, TimeUnit.DAYS);
@@ -88,6 +89,20 @@ public class BusinessController {
         if (businessId == null && orderTypeId == null) {
             redisCacheService.deleteByPattern(RedisCacheService.BUSINESS_PREFIX + "*");
         }
+        return "ok";
+    }
+
+    /** 清除全部浏览历史 */
+    @PostMapping("/clearBrowseHistory")
+    public String clearBrowseHistory(@RequestParam String userId) {
+        redisTemplate.delete(RedisCacheService.browseKey(userId));
+        return "ok";
+    }
+
+    /** 删除单条浏览历史 */
+    @PostMapping("/removeBrowseItem")
+    public String removeBrowseItem(@RequestParam String userId, @RequestParam Integer businessId) {
+        redisTemplate.opsForList().remove(RedisCacheService.browseKey(userId), 0, businessId.toString());
         return "ok";
     }
 }

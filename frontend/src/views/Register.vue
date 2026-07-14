@@ -39,24 +39,35 @@ const cd = ref(0);
 const sendCode = async () => {
   if (!form.userId) return alert('请先输入账号');
   try {
-    await post('/user/sendCode', { target: form.userId });
-    alert('验证码已发送（查看后端控制台）');
-    cd.value = 60;
-    const t = setInterval(() => { cd.value--; if (cd.value <= 0) clearInterval(t); }, 1000);
-  } catch (e) { alert('发送失败'); }
+    const res = await post('/user/sendCode', { phone: form.userId });
+    if (res.data.success) {
+      alert('验证码已发送（查看后端控制台）');
+      cd.value = 60;
+      const t = setInterval(() => { cd.value--; if (cd.value <= 0) clearInterval(t); }, 1000);
+    } else {
+      alert(res.data.message || '发送失败');
+    }
+  } catch (e) { alert('发送失败，请检查网络'); }
 };
 
 const register = async () => {
   if (!form.userId || !form.password || !form.userName) return alert('请填写完整信息');
   if (form.password !== confirmPwd.value) return alert('两次密码不一致');
+  if (!code.value) return alert('请输入验证码');
   try {
-    const res = await post('/user/saveUser', form);
-    if (res.data > 0) {
+    const res = await post('/user/saveUser', {
+      userId: form.userId,
+      password: form.password,
+      userName: form.userName,
+      userSex: form.userSex,
+      code: code.value
+    });
+    if (res.data.success) {
       alert('注册成功！');
       router.push('/login');
     } else {
-      alert('注册失败，账号可能已存在');
+      alert(res.data.message || '注册失败，账号可能已存在');
     }
-  } catch (e) { alert('注册失败'); }
+  } catch (e) { alert('注册失败，请检查网络'); }
 };
 </script>

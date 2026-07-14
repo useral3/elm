@@ -56,7 +56,7 @@ public class AuthController {
         redisTemplate.opsForValue().set(cooldownKey, "1", 60, TimeUnit.SECONDS);
 
         // TODO: 接入短信服务商，目前控制台打印
-        System.out.println("[验证码] phone=" + phone + " code=" + code);
+        System.out.println("[Verification] phone=" + phone + " code=" + code);
 
         result.put("success", true);
         result.put("message", "验证码已发送");

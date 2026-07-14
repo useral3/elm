@@ -74,8 +74,10 @@ const totalPrice = computed(() => foodArr.value.reduce((s, f) => s + f.quantity 
 
 onMounted(async () => {
   try {
+    const bizParams = { businessId };
+    if (user) bizParams.userId = user.userId;  // 记录浏览历史
     const [bizRes, foodRes] = await Promise.all([
-      post('/business/getBusinessById', { businessId }),
+      post('/business/getBusinessById', bizParams),
       post('/food/listFoodByBusinessId', { businessId })
     ]);
     business.value = bizRes.data;

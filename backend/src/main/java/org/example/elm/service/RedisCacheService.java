@@ -25,7 +25,7 @@ public class RedisCacheService {
     public <T> T get(String key, Class<T> clazz) {
         String json = redisTemplate.opsForValue().get(key);
         if (json == null) {
-            System.out.println("[Redis] MISS  → " + key + " (缓存未命中)");
+            System.out.println("[Redis] MISS  -> " + key + " (cache miss)");
             return null;
         }
         System.out.println("[Redis] HIT ✓ " + key);
@@ -35,7 +35,7 @@ public class RedisCacheService {
     public <T> List<T> getList(String key, Class<T> itemClazz) {
         String json = redisTemplate.opsForValue().get(key);
         if (json == null) {
-            System.out.println("[Redis] MISS  → " + key + " (缓存未命中)");
+            System.out.println("[Redis] MISS  -> " + key + " (cache miss)");
             return null;
         }
         System.out.println("[Redis] HIT ✓ " + key);

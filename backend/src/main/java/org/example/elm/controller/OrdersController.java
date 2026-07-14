@@ -18,6 +18,9 @@ public class OrdersController {
     @Autowired
     private RedisCacheService redisCacheService;
 
+    @Autowired
+    private LeaderboardController leaderboardController;
+
     /**
      * 根据用户编号、商家编号、订单总金额、送货地址编号向订单表中添加一条记录，
      * 并获取自动生成的订单编号，然后根据用户编号、商家编号从购物车表中查询所有数据，
@@ -66,7 +69,17 @@ public class OrdersController {
     @PostMapping("/updateOrderPayStatus")
     public int updateOrderPayStatus(@RequestParam Integer orderId) {
         int result = ordersService.updateOrderPayStatus(orderId);
-        // 支付后清除相关缓存（订单列表不便于按 userId 精确清除，下次查询自动重建）
+        if (result > 0) {
+            Orders order = ordersService.getOrdersById(orderId);
+            // 清除该用户的订单列表缓存
+            if (order != null) {
+                redisCacheService.delete(RedisCacheService.ordersKey(order.getUserId()));
+                // 累加商家销量
+                if (order.getBusinessId() != null) {
+                    leaderboardController.incrSales(order.getBusinessId(), 1);
+                }
+            }
+        }
         return result;
     }
 }

@@ -43,8 +43,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
 
-        // /uploads/** 映射到文件系统
-        String uploadPath = "D:/JavaEE/elm/uploads/";
+        // /uploads/** 映射到文件系统（项目根目录下的 uploads）
+        String uploadPath = new File(System.getProperty("user.dir"), "../uploads").getAbsolutePath() + "/";
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();

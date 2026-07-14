@@ -22,7 +22,7 @@
 <script setup>
 import { reactive, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { post, api } from '../api';
+import api, { post } from '../api';
 import { imgUrl } from '../utils/image';
 import NavBar from '../components/NavBar.vue';
 

@@ -20,6 +20,7 @@
       <div @click="go('/userAddress')" style="display:flex;align-items:center;padding:15px 16px;border-bottom:1px solid var(--border);cursor:pointer;font-size:15px;"><span style="margin-right:12px;">📍</span><span style="flex:1;">收货地址</span><span style="color:#ccc;">›</span></div>
       <div @click="go('/userInfo')" style="display:flex;align-items:center;padding:15px 16px;border-bottom:1px solid var(--border);cursor:pointer;font-size:15px;"><span style="margin-right:12px;">👤</span><span style="flex:1;">个人信息</span><span style="color:#ccc;">›</span></div>
       <div @click="go('/favoriteList')" style="display:flex;align-items:center;padding:15px 16px;border-bottom:1px solid var(--border);cursor:pointer;font-size:15px;"><span style="margin-right:12px;">❤️</span><span style="flex:1;">我的收藏</span><span style="color:#ccc;">›</span></div>
+      <div @click="go('/browseHistory')" style="display:flex;align-items:center;padding:15px 16px;cursor:pointer;font-size:15px;"><span style="margin-right:12px;">🕐</span><span style="flex:1;">浏览记录</span><span style="color:#ccc;">›</span></div>
     </div>
     <div class="card" style="padding:0;" v-if="user">
       <div @click="logout" style="display:flex;align-items:center;padding:15px 16px;cursor:pointer;font-size:15px;color:#f40;"><span style="margin-right:12px;">🚪</span><span style="flex:1;">退出登录</span><span style="color:#ccc;">›</span></div>

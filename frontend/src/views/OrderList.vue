@@ -9,7 +9,9 @@
     <div v-for="o in orders" :key="o.orderId" class="card" style="cursor:pointer;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
         <span style="font-size:15px;font-weight:600;">{{ o.business?.businessName || '商家#'+o.businessId }}</span>
-        <span :style="{color:o.orderState===1?'#38ca73':'#f90',fontSize:'13px'}">{{ o.orderState === 1 ? '已支付' : '待支付' }}</span>
+        <span :style="{color: o.orderState===1 ? '#38ca73' : o.orderState===2 ? '#999' : '#f90',fontSize:'13px'}">
+          {{ o.orderState === 1 ? '已支付' : o.orderState === 2 ? '已取消' : '待支付' }}
+        </span>
       </div>
       <div style="font-size:13px;color:var(--text-secondary);">订单号：{{ o.orderId }} | {{ o.orderDate }}</div>
       <div style="font-size:16px;font-weight:600;margin-top:4px;">¥{{ o.orderTotal }}</div>

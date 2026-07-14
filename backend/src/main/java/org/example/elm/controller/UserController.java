@@ -100,10 +100,8 @@ public class UserController {
                 return result;
             }
             
-            // 获取项目根目录
-            String projectPath = System.getProperty("user.dir");
-            // 创建上传目录
-            String uploadDir = projectPath + "/uploads";
+            // 使用 UploadConfig 的统一上传路径
+            String uploadDir = uploadConfig.getUploadPath();
             File uploadDirectory = new File(uploadDir);
             if (!uploadDirectory.exists()) {
                 uploadDirectory.mkdirs();

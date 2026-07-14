@@ -70,15 +70,14 @@ public class ChatServiceImpl implements ChatService {
                 String reply = parseApiResponse(responseBody);
                 return new ChatResponse(reply, true, null, request.getSessionId());
             } else {
-                // 提供更详细的错误信息
-                String errorDetails = "API请求失败: " + response.code() + " " + response.message() + "\n" +
-                                     "响应体: " + responseBody;
-                System.err.println("API调用错误详情: " + errorDetails);
-                return new ChatResponse(null, false, errorDetails, request.getSessionId());
+                // API 不可用时自动降级到本地 mock
+                System.err.println("[Chat] API unavailable (code=" + response.code() + "), fallback to mock");
+                return mockResponse(request);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            return new ChatResponse(null, false, "请求过程中发生错误: " + e.getMessage(), request.getSessionId());
+            // 网络异常也降级到本地 mock
+            System.err.println("[Chat] Network error, fallback to mock: " + e.getMessage());
+            return mockResponse(request);
         }
     }
 
@@ -109,7 +108,7 @@ public class ChatServiceImpl implements ChatService {
 
             // 百炼应用 API 错误
             if (jsonObject.containsKey("code") && jsonObject.containsKey("message")) {
-                return "API错误: " + jsonObject.getString("message");
+                return "API error: " + jsonObject.getString("message");
             }
 
             // 百炼应用 API 格式: output.text
@@ -132,10 +131,10 @@ public class ChatServiceImpl implements ChatService {
                 }
             }
 
-            return "无法解析回复: " + responseBody.substring(0, Math.min(200, responseBody.length()));
+            return "Cannot parse response: " + responseBody.substring(0, Math.min(200, responseBody.length()));
         } catch (Exception e) {
             e.printStackTrace();
-            return "解析回复出错: " + e.getMessage();
+            return "Parse error: " + e.getMessage();
         }
     }
 
@@ -169,7 +168,7 @@ public class ChatServiceImpl implements ChatService {
                         
                         // 指数退避等待
                         long backoffMs = initialBackoffMs * (long) Math.pow(2, attempt);
-                        System.out.println("[重试] API 返回 " + response.code() + "，第 " + (attempt + 1) + " 次重试，等待 " + backoffMs + "ms");
+                        System.out.println("[Retry] API returned " + response.code() + ", attempt " + (attempt + 1) + ", waiting " + backoffMs + "ms");
                         
                         try {
                             Thread.sleep(backoffMs);
@@ -187,7 +186,7 @@ public class ChatServiceImpl implements ChatService {
                     
                     if (attempt < maxRetries) {
                         long backoffMs = initialBackoffMs * (long) Math.pow(2, attempt);
-                        System.out.println("[重试] 请求超时，第 " + (attempt + 1) + " 次重试，等待 " + backoffMs + "ms");
+                        System.out.println("[Retry] Request timeout, attempt " + (attempt + 1) + ", waiting " + backoffMs + "ms");
                         
                         try {
                             Thread.sleep(backoffMs);
@@ -202,7 +201,7 @@ public class ChatServiceImpl implements ChatService {
                     
                     if (attempt < maxRetries) {
                         long backoffMs = initialBackoffMs * (long) Math.pow(2, attempt);
-                        System.out.println("[重试] 网络异常，第 " + (attempt + 1) + " 次重试，等待 " + backoffMs + "ms");
+                        System.out.println("[Retry] Network error, attempt " + (attempt + 1) + ", waiting " + backoffMs + "ms");
                         
                         try {
                             Thread.sleep(backoffMs);

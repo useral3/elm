@@ -17,9 +17,22 @@
       </div>
     </div>
 
+    <!-- 秒杀入口 -->
+    <div @click="$router.push('/flashSale')"
+         style="margin:8px 12px;padding:12px 16px;border-radius:12px;
+                background:linear-gradient(135deg,#f40,#f60);color:#fff;
+                display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+      <div>
+        <div style="font-size:16px;font-weight:700;">⚡ 限时秒杀</div>
+        <div style="font-size:11px;opacity:0.85;">超低价抢购，手慢无！</div>
+      </div>
+      <span style="font-size:13px;">立即抢购 ›</span>
+    </div>
+
     <!-- Redis 销量排行榜 -->
-    <div class="card" v-if="rankList.length">
+    <div class="card">
       <div style="font-size:16px;font-weight:600;margin-bottom:12px;">🏆 热销排行</div>
+      <div v-if="rankList.length === 0" style="text-align:center;color:var(--text-muted);padding:20px 0;">暂无排行数据，快去下单吧！</div>
       <div v-for="(item, i) in rankList" :key="i"
            @click="toBusinessInfo(item.businessId)"
            style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;">

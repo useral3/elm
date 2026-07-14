@@ -18,6 +18,8 @@ const routes = [
   { path: '/userInfo',   name: 'userInfo',        component: () => import('../views/UserInfo.vue'),   meta: { auth: true } },
   { path: '/chatbot',    name: 'ChatBot',         component: () => import('../views/ChatBot.vue') },
   { path: '/favoriteList', name: 'FavoriteList',  component: () => import('../views/FavoriteList.vue'), meta: { auth: true } },
+  { path: '/browseHistory', name: 'BrowseHistory', component: () => import('../views/BrowseHistory.vue'), meta: { auth: true } },
+  { path: '/flashSale', name: 'FlashSale', component: () => import('../views/FlashSale.vue') },
 ];
 
 const router = createRouter({ history: createWebHashHistory(), routes });

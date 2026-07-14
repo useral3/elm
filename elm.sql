@@ -165,4 +165,17 @@ CREATE TABLE `user`  (
 -- Records of user
 -- ----------------------------
 
+-- ----------------------------
+-- Table structure for favorite
+-- ----------------------------
+DROP TABLE IF EXISTS `favorite`;
+CREATE TABLE `favorite`  (
+  `favoriteId` int NOT NULL AUTO_INCREMENT COMMENT '收藏编号',
+  `userId` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '用户编号',
+  `businessId` int NOT NULL COMMENT '商家编号',
+  `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '收藏时间',
+  PRIMARY KEY (`favoriteId`) USING BTREE,
+  UNIQUE KEY `uk_user_biz` (`userId`, `businessId`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+
 SET FOREIGN_KEY_CHECKS = 1;

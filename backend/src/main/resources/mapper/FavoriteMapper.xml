@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.elm.mapper.FavoriteMapper">
+
+    <insert id="insertFavorite">
+        INSERT INTO favorite (userId, businessId, createTime)
+        VALUES (#{userId}, #{businessId}, NOW())
+    </insert>
+
+    <delete id="deleteFavorite">
+        DELETE FROM favorite WHERE userId = #{userId} AND businessId = #{businessId}
+    </delete>
+
+    <select id="countByUserAndBusiness" resultType="int">
+        SELECT COUNT(*) FROM favorite WHERE userId = #{userId} AND businessId = #{businessId}
+    </select>
+
+    <select id="countByBusiness" resultType="int">
+        SELECT COUNT(*) FROM favorite WHERE businessId = #{businessId}
+    </select>
+
+    <resultMap id="FavoriteWithBusiness" type="org.example.elm.entity.Favorite">
+        <id column="favoriteId" property="favoriteId"/>
+        <result column="userId" property="userId"/>
+        <result column="businessId" property="businessId"/>
+        <result column="createTime" property="createTime"/>
+        <result column="favoriteCount" property="favoriteCount"/>
+        <association property="business" javaType="org.example.elm.entity.Business">
+            <id column="businessId" property="businessId"/>
+            <result column="businessName" property="businessName"/>
+            <result column="businessAddress" property="businessAddress"/>
+            <result column="businessExplain" property="businessExplain"/>
+            <result column="businessImg" property="businessImg"/>
+            <result column="orderTypeId" property="orderTypeId"/>
+            <result column="starPrice" property="starPrice"/>
+            <result column="deliveryPrice" property="deliveryPrice"/>
+        </association>
+    </resultMap>
+
+    <select id="listByUser" resultMap="FavoriteWithBusiness">
+        SELECT f.favoriteId, f.userId, f.businessId, f.createTime,
+               b.businessName, b.businessAddress, b.businessExplain, b.businessImg,
+               b.orderTypeId, b.starPrice, b.deliveryPrice,
+               (SELECT COUNT(*) FROM favorite WHERE businessId = f.businessId) AS favoriteCount
+        FROM favorite f
+        LEFT JOIN business b ON f.businessId = b.businessId
+        WHERE f.userId = #{userId}
+        ORDER BY f.createTime DESC
+    </select>
+</mapper>

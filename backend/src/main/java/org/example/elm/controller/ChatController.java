@@ -16,7 +16,7 @@ public class ChatController {
 
     @PostMapping
     public ChatResponse sendMessage(@RequestBody ChatRequest request) {
-        System.out.println("收到消息请求: " + request.getMessage());
+        System.out.println("[Chat] Message received, length=" + (request.getMessage() != null ? request.getMessage().length() : 0));
         return chatService.chat(request);
     }
     }

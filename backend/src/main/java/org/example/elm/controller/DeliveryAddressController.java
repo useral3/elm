@@ -49,7 +49,7 @@ public class DeliveryAddressController {
             @RequestParam String contactTel,
             @RequestParam String address,
             @RequestParam String userId) {
-        System.out.println("保存送货地址: " + contactName + ", " + contactSex + ", " + contactTel + ", " + address + ", " + userId);
+        System.out.println("[DeliveryAddress] Save: " + contactName + ", " + contactSex + ", " + contactTel + ", " + address + ", " + userId);
         return deliveryAddressService.saveDeliveryAddress(contactName, contactSex, contactTel, address, userId);
     }
     
