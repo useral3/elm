@@ -66,9 +66,29 @@ public class RedisCacheService {
     public static final String BUSINESS_LIST_PREFIX = "cache:business:list:";
     public static final String FOOD_PREFIX = "cache:food:";
     public static final String FOOD_LIST_PREFIX = "cache:food:list:";
+    public static final String ORDERS_PREFIX = "cache:orders:";
+    public static final String USER_PREFIX = "cache:user:";
+
+    // 验证码
+    public static final String CODE_PREFIX = "code:";
+    public static final String CODE_COOLDOWN_PREFIX = "code:cooldown:";
+
+    // 登录限流
+    public static final String LOGIN_ATTEMPT_PREFIX = "login:attempt:";
+    public static final String LOGIN_LOCKED_PREFIX = "login:locked:";
+
+    // 浏览历史
+    public static final String BROWSE_PREFIX = "browse:";
 
     public static String businessKey(Integer id) { return BUSINESS_PREFIX + id; }
     public static String businessListKey(Integer orderTypeId) { return BUSINESS_LIST_PREFIX + orderTypeId; }
     public static String foodKey(Integer id) { return FOOD_PREFIX + id; }
     public static String foodListKey(Integer businessId) { return FOOD_LIST_PREFIX + businessId; }
+    public static String ordersKey(String userId) { return ORDERS_PREFIX + userId; }
+    public static String userKey(String userId) { return USER_PREFIX + userId; }
+    public static String codeKey(String phone) { return CODE_PREFIX + phone; }
+    public static String codeCooldownKey(String phone) { return CODE_COOLDOWN_PREFIX + phone; }
+    public static String loginAttemptKey(String userId) { return LOGIN_ATTEMPT_PREFIX + userId; }
+    public static String loginLockedKey(String userId) { return LOGIN_LOCKED_PREFIX + userId; }
+    public static String browseKey(String userId) { return BROWSE_PREFIX + userId; }
 }

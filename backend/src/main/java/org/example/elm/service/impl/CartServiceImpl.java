@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 购物车 — 基于 Redis Hash
@@ -40,6 +41,15 @@ public class CartServiceImpl implements CartService {
 
     private String cartUserKey(String userId) {
         return "cart:user:" + userId;
+    }
+
+    /** 购物车 TTL：7 天，每次操作刷新 */
+    private static final long CART_TTL_DAYS = 7;
+
+    private void refreshCartTTL(String userId, Integer businessId) {
+        String key = cartKey(userId, businessId);
+        redisTemplate.expire(key, CART_TTL_DAYS, TimeUnit.DAYS);
+        redisTemplate.expire(cartUserKey(userId), CART_TTL_DAYS, TimeUnit.DAYS);
     }
 
     @Override
@@ -98,6 +108,8 @@ public class CartServiceImpl implements CartService {
         }
         // 记录用户在这个商家有购物车
         redisTemplate.opsForSet().add(cartUserKey(userId), businessId.toString());
+        // 刷新 TTL
+        refreshCartTTL(userId, businessId);
         return 1;
     }
 
@@ -107,6 +119,8 @@ public class CartServiceImpl implements CartService {
             return removeCart(userId, businessId, foodId);
         }
         redisTemplate.opsForHash().put(cartKey(userId, businessId), foodId.toString(), quantity.toString());
+        // 刷新 TTL
+        refreshCartTTL(userId, businessId);
         return 1;
     }
 

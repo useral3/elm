@@ -2,8 +2,10 @@ package org.example.elm.controller;
 
 import org.example.elm.config.UploadConfig;
 import org.example.elm.entity.User;
+import org.example.elm.service.RedisCacheService;
 import org.example.elm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,27 +16,54 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    
+
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private UploadConfig uploadConfig;
-    
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
     @PostMapping("/getUserByIdByPass")
     public User getUserByIdByPass(@RequestParam String userId, @RequestParam String password) {
         return userService.getUserByIdByPass(userId, password);
     }
-    
+
     @PostMapping("/getUserById")
     public User getUserById(@RequestParam String userId) {
         return userService.getUserById(userId);
     }
-    
+
     @PostMapping("/saveUser")
-    public int saveUser(@RequestParam String userId, @RequestParam String password, 
-                       @RequestParam String userName, @RequestParam Integer userSex) {
-        return userService.saveUser(userId, password, userName, userSex);
+    public Map<String, Object> saveUser(@RequestParam String userId, @RequestParam String password,
+                       @RequestParam String userName, @RequestParam Integer userSex,
+                       @RequestParam(required = false) String code) {
+        Map<String, Object> result = new HashMap<>();
+
+        // 验证码校验：如果提供了验证码参数则校验
+        if (code != null && !code.isEmpty()) {
+            String codeKey = RedisCacheService.codeKey(userId);
+            String savedCode = redisTemplate.opsForValue().get(codeKey);
+            if (savedCode == null) {
+                result.put("success", false);
+                result.put("message", "验证码已过期，请重新获取");
+                return result;
+            }
+            if (!savedCode.equals(code)) {
+                result.put("success", false);
+                result.put("message", "验证码错误");
+                return result;
+            }
+            // 验证通过，删除验证码
+            redisTemplate.delete(codeKey);
+        }
+
+        int rows = userService.saveUser(userId, password, userName, userSex);
+        result.put("success", rows > 0);
+        result.put("message", rows > 0 ? "注册成功" : "注册失败");
+        return result;
     }
     
     @PostMapping("/updateUser")

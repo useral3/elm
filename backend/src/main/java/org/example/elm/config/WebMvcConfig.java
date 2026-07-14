@@ -28,10 +28,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 暂不拦截，前端适配 JWT 后再启用
-        // registry.addInterceptor(loginInterceptor)
-        //         .addPathPatterns("/cart/**", "/orders/**", "/deliveryAddress/**",
-        //                          "/favorite/**", "/user/currentUser", "/user/logout");
+        // 启用登录拦截器
+        registry.addInterceptor(loginInterceptor)
+                .addPathPatterns("/cart/**", "/orders/**", "/deliveryAddress/**",
+                                 "/favorite/**", "/user/currentUser", "/user/logout")
+                .excludePathPatterns("/user/login", "/user/saveUser", "/user/getUserById",
+                                     "/user/sendCode", "/business/**", "/food/**",
+                                     "/chat/**", "/static/**", "/uploads/**");
     }
 
     @Override
