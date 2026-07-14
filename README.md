@@ -26,8 +26,7 @@ elm/
 │       └── views/            # 页面视图（20+ 页面）
 ├── docs/                     # 文档与截图
 ├── uploads/                  # 文件上传目录
-├── elm.sql                   # 数据库初始化
-└── seed.sql                  # 示例数据（100家商家 + 206个菜品）
+└── elm.sql                   # 数据库初始化（含示例数据）
 ```
 
 ## 🛠 技术栈
@@ -74,8 +73,7 @@ elm/
 ### 1. 数据库初始化
 
 ```bash
-mysql -u root -p < elm.sql
-mysql -u root -p --default-character-set=utf8mb4 elm < seed.sql
+mysql -u root -p --default-character-set=utf8mb4 < elm.sql
 ```
 
 ### 2. 配置修改
