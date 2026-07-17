@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Sensitive Config ###
+application.properties
+
+### Uploads (runtime files) ###
+**/uploads/
+uploads/

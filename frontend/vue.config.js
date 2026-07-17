@@ -5,6 +5,12 @@ module.exports = defineConfig({
   devServer: {
     port: 8082,
     proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        ws: false,
+        pathRewrite: { '^/api': '' }
+      },
       '/static': {
         target: 'http://localhost:8080',
         changeOrigin: true,

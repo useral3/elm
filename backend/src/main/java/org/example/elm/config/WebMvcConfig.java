@@ -37,17 +37,24 @@ public class WebMvcConfig implements WebMvcConfigurer {
                                      "/chat/**", "/static/**", "/uploads/**");
     }
 
+    @Autowired
+    private UploadConfig uploadConfig;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // /static/** 映射到 classpath 下的 static 目录
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
 
-        // /uploads/** 映射到文件系统（项目根目录下的 uploads）
-        String uploadPath = new File(System.getProperty("user.dir"), "../uploads").getAbsolutePath() + "/";
+        // /uploads/** 映射到文件系统（使用配置的 upload.path）
+        String uploadPath = uploadConfig.getUploadPath();
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
+        }
+        // 确保以 / 结尾，Spring 要求目录以 / 结尾
+        if (!uploadPath.endsWith("/") && !uploadPath.endsWith("\\")) {
+            uploadPath += "/";
         }
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:" + uploadPath);

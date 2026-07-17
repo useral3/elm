@@ -2,7 +2,7 @@ import axios from 'axios';
 import qs from 'qs';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/',
+  baseURL: '/api',
   timeout: 15000,
   headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
 });
@@ -49,7 +49,7 @@ export function post(url, params = {}) {
 /** POST 请求（JSON 格式） */
 export function postJSON(url, data = {}) {
   const token = sessionStorage.getItem('token');
-  return axios.post('http://localhost:8080' + url, data, {
+  return axios.post('/api' + url, data, {
     timeout: 60000,  // 聊天接口可能较慢，60秒超时
     headers: {
       'Content-Type': 'application/json',
